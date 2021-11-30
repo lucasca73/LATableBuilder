@@ -1,0 +1,6 @@
+framework module Pods_LATableBuilder_Example {
+  umbrella header "Pods-LATableBuilder_Example-umbrella.h"
+
+  export *
+  module * { export * }
+}

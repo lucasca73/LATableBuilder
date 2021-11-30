@@ -1,0 +1,35 @@
+PODS:
+  - FBSnapshotTestCase (2.1.4):
+    - FBSnapshotTestCase/SwiftSupport (= 2.1.4)
+  - FBSnapshotTestCase/Core (2.1.4)
+  - FBSnapshotTestCase/SwiftSupport (2.1.4):
+    - FBSnapshotTestCase/Core
+  - LATableBuilder (0.0.1)
+  - Nimble (9.2.1)
+  - Quick (4.0.0)
+
+DEPENDENCIES:
+  - FBSnapshotTestCase
+  - LATableBuilder (from `../`)
+  - Nimble (~> 9.2)
+  - Quick
+
+SPEC REPOS:
+  trunk:
+    - FBSnapshotTestCase
+    - Nimble
+    - Quick
+
+EXTERNAL SOURCES:
+  LATableBuilder:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
+  LATableBuilder: 750e903662d5dccb9b3e87a353122869aaaa563d
+  Nimble: e7e615c0335ee4bf5b0d786685451e62746117d5
+  Quick: 6473349e43b9271a8d43839d9ba1c442ed1b7ac4
+
+PODFILE CHECKSUM: 6703abab8508692a28552d924cca6ce04ce7f2b7
+
+COCOAPODS: 1.11.2
