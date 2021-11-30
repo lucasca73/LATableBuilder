@@ -30,4 +30,9 @@ class ViewModel {
             self.controller?.buildTable()
         }
     }
+    
+    func presentDetail() {
+        let detailController = DetailViewController()
+        self.controller?.present(detailController, animated: true)
+    }
 }

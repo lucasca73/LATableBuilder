@@ -1,63 +1,27 @@
+//
+//  LATableBuilderView.swift
+//  LATableBuilder
+//
+//  Created by Lucas Costa Araujo on 29/11/21.
+//
+
 import UIKit
 
-public protocol STCustomDidSelectRowAt {
-    func didSelectRowAt(indexPath: IndexPath)
-}
-
-public typealias STSectionViewBuilder = (_ section: Int) -> UIView?
-
-open class LATableBuilderController: UIViewController {
-    
+open class LATableBuilderView: UITableView {
     public var reloadAnimation: UITableView.RowAnimation { .none }
     
-    open var tableView = UITableView()
     open var sections = [STSectionBuilder]()
-    open var willAppearEvent: (() -> Void)?
-    open var didAppearSetup: ( (LATableBuilderController) -> Void )?
     
     open func buildOnWillAppear() -> Bool {
         return true
     }
     
-    override open func viewWillAppear(_ animated: Bool) {
-        
-        if buildOnWillAppear() {
-            buildTable()
-            tableView.reloadData()
-        }
-        super.viewWillAppear(animated)
-        willAppearEvent?()
-    }
-    
-    override open func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        didAppearSetup?(self)
-    }
-    
-    override open func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        clearBuilders()
-        tableView.reloadData()
-    }
-    
-    deinit {
-        debugPrint("[deinit] \(className)")
-    }
-    
-    override open func viewDidLoad() {
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.rowHeight = UITableView.automaticDimension
-        
-        self.view.backgroundColor = .white
-        
-        self.view.addSubview(tableView)
-        
-        tableView.setAllConstraints(on: self.view)
-        tableView.separatorStyle = .none
-        
-        tableView.delegate = self
-        tableView.dataSource = self
-        super.viewDidLoad()
+    open func setupTableView() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.rowHeight = UITableView.automaticDimension
+        self.separatorStyle = .none
+        self.delegate = self
+        self.dataSource = self
     }
     
     open func clearBuilders() {
@@ -74,7 +38,7 @@ open class LATableBuilderController: UIViewController {
     
     open func reload(_ ids: [String]) {
         
-        if tableView.dataSource == nil {
+        if self.dataSource == nil {
             return
         }
         
@@ -87,13 +51,16 @@ open class LATableBuilderController: UIViewController {
             var indexRemoving = [IndexPath]()
             var sectionUpdate = IndexSet()
             
+            // Running through sections
             for (sectionIndex, sectionBuilder) in sections.enumerated() {
+                
+                // Running through builders
                 for (builderIndex, builder) in sectionBuilder.builders.enumerated() {
                     for id in ids {
                         if builder.shouldReload(id: id) {
                             
                             if builder.isTable() {
-                                let lastCount = tableView.numberOfRows(inSection: sectionIndex)
+                                let lastCount = self.numberOfRows(inSection: sectionIndex)
                                 let currentCount = builder.getCount()
                                 
                                 if currentCount > lastCount {
@@ -124,45 +91,45 @@ open class LATableBuilderController: UIViewController {
                 }
             }
             
-            tableView.beginUpdates()
+            self.beginUpdates()
             
             if indexes.isEmpty == false {
-                tableView.reloadRows(at: indexes, with: animation)
+                self.reloadRows(at: indexes, with: animation)
             }
             
             if indexAppending.isEmpty == false {
-                tableView.insertRows(at: indexAppending, with: animation)
+                self.insertRows(at: indexAppending, with: animation)
                 var secReload = IndexSet()
                 for index in indexAppending {
                     secReload.insert(index.section)
                 }
-                tableView.reloadSections(secReload, with: animation)
+                self.reloadSections(secReload, with: animation)
             }
             
             if indexRemoving.isEmpty == false {
-                tableView.deleteRows(at: indexRemoving, with: animation)
+                self.deleteRows(at: indexRemoving, with: animation)
                 var secReload = IndexSet()
                 for index in indexRemoving {
                     secReload.insert(index.section)
                 }
-                tableView.reloadSections(secReload, with: animation)
+                self.reloadSections(secReload, with: animation)
             }
             
             if sectionUpdate.isEmpty == false {
-                tableView.reloadSections(sectionUpdate, with: animation)
+                self.reloadSections(sectionUpdate, with: animation)
             }
             
-            tableView.endUpdates()
+            self.endUpdates()
             
         } else {
-            tableView.reloadData()
+            self.reloadData()
         }
     }
     
     open func addSection( title: String? = nil,
-                     height: CGFloat = 0,
-                     reloadListener: String? = nil,
-                     _ builder: STSectionViewBuilder? = nil ) {
+                          height: CGFloat = 0,
+                          reloadListener: String? = nil,
+                          _ builder: STSectionViewBuilder? = nil ) {
         let sec = STSectionBuilder()
         sec.viewBuilder = builder
         sec.height = height
@@ -173,18 +140,18 @@ open class LATableBuilderController: UIViewController {
     }
     
     @discardableResult open func add<T: UITableViewCell>(cell: T.Type,
-                                                           height: CGFloat = UITableView.automaticDimension,
-                                                           reloadListener: String? = nil,
-                                                           builder: ((T) -> Void)? = nil ) -> STCellBuilder<T> {
+                                                         height: CGFloat = UITableView.automaticDimension,
+                                                         reloadListener: String? = nil,
+                                                         builder: ((T) -> Void)? = nil ) -> STCellBuilder<T> {
         
-        tableView.register(cellType: cell)
+        self.register(cellType: cell)
         let cellBuilder = STCellBuilder(type: cell, builder: builder, cellId: reloadListener)
         cellBuilder.type = cell
         cellBuilder.height = height
         
         cellBuilder.leadingEdit = nil
         cellBuilder.trailingEdit = nil
-
+        
         if sections.last?.isTable() ?? true {
             addSection()
         }
@@ -197,12 +164,12 @@ open class LATableBuilderController: UIViewController {
     }
     
     @discardableResult open func addTable<T: UITableViewCell>(cell: T.Type,
-                                                                count: Int,
-                                                                rowHeight: CGFloat = UITableView.automaticDimension,
-                                                                reloadListener: String? = nil,
-                                                                builder: ((IndexPath, T) -> Void)? = nil ) -> STTableBuilder<T> {
+                                                              count: Int,
+                                                              rowHeight: CGFloat = UITableView.automaticDimension,
+                                                              reloadListener: String? = nil,
+                                                              builder: ((IndexPath, T) -> Void)? = nil ) -> STTableBuilder<T> {
         
-        tableView.register(cellType: cell)
+        self.register(cellType: cell)
         let tb = STTableBuilder(type: cell, builder: builder, cellId: reloadListener)
         tb.type = cell
         tb.rows = count
@@ -224,11 +191,11 @@ open class LATableBuilderController: UIViewController {
     }
     
     @discardableResult open func addTable<T: UITableViewCell>(cell: T.Type,
-                                                         counter: @escaping (() -> Int),
-                                                         reloadListener: String? = nil,
-                                                         builder: ((IndexPath, T) -> Void)? = nil ) -> STTableBuilder<T> {
+                                                              counter: @escaping (() -> Int),
+                                                              reloadListener: String? = nil,
+                                                              builder: ((IndexPath, T) -> Void)? = nil ) -> STTableBuilder<T> {
         
-        tableView.register(cellType: cell)
+        self.register(cellType: cell)
         let tb = STTableBuilder(type: cell, builder: builder, cellId: reloadListener)
         tb.type = cell
         tb.rows = counter()
@@ -249,10 +216,9 @@ open class LATableBuilderController: UIViewController {
         return tb
     }
     
-    
     @discardableResult open func addTable<T: UITableViewCell>(cell: T.Type, reloadListener: String? = nil) -> STTableBuilder<T> {
         
-        tableView.register(cellType: cell)
+        self.register(cellType: cell)
         let tb = STTableBuilder(type: cell, builder: nil, cellId: reloadListener)
         tb.type = cell
         
@@ -289,12 +255,12 @@ open class LATableBuilderController: UIViewController {
         sections = sections.filter({$0.sectionId != id})
         
         // Updating Tableview
-        tableView.deleteSections(removingIndexes, with: animation)
+        self.deleteSections(removingIndexes, with: animation)
     }
     
     open func insertNewSection(id: String, animation: UITableView.RowAnimation = .automatic) {
         
-        let tableViewCount = tableView.numberOfSections
+        let tableViewCount = self.numberOfSections
         let currentCount = sections.count
         
         if currentCount == tableViewCount {
@@ -305,7 +271,7 @@ open class LATableBuilderController: UIViewController {
             }
             
             // Reload section
-            tableView.reloadSections(reloadIndexes, with: animation)
+            self.reloadSections(reloadIndexes, with: animation)
             
         } else if currentCount > tableViewCount {
             var appendingIndexes = IndexSet()
@@ -315,7 +281,7 @@ open class LATableBuilderController: UIViewController {
             }
             
             // Insert section
-            tableView.insertSections(appendingIndexes, with: animation)
+            self.insertSections(appendingIndexes, with: animation)
         } else {
             
             // nothing
@@ -335,7 +301,7 @@ open class LATableBuilderController: UIViewController {
     }
 }
 
-extension LATableBuilderController: UITableViewDelegate, UITableViewDataSource {
+extension LATableBuilderView: UITableViewDelegate, UITableViewDataSource {
     
     public func numberOfSections(in tableView: UITableView) -> Int {
         return sections.count
@@ -405,7 +371,7 @@ extension LATableBuilderController: UITableViewDelegate, UITableViewDataSource {
             return section.builders[indexPath.row].getHeight()
         }
     }
-
+    
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
@@ -425,11 +391,3 @@ extension LATableBuilderController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-extension UIView {
-    func setAllConstraints(on view: UIView, padding: CGFloat = 0) {
-        self.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding).isActive = true
-        self.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding).isActive = true
-        self.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -padding).isActive = true
-        self.topAnchor.constraint(equalTo: view.topAnchor, constant: padding).isActive = true
-    }
-}

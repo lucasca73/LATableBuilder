@@ -9,7 +9,8 @@
 import UIKit
 import LATableBuilder
 
-class ViewController: STGenericTableViewController {
+class ViewController: UIViewController, LATableBuilderProtocol {
+    var tableView: LATableBuilderView? = LATableBuilderView()
 
     lazy var viewModel: ViewModel? = {
         let viewModel = ViewModel()
@@ -17,13 +18,19 @@ class ViewController: STGenericTableViewController {
         return viewModel
     }()
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupTableView()
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         viewModel?.loadInfo()
+        buildTable()
     }
     
-    override func buildTable() {
-        super.buildTable()
+    func buildTable() {
+        clearBuilders()
         
         // Build methods, it helps to see the which comes first
         buildSideButtonsExample()
@@ -55,6 +62,17 @@ class ViewController: STGenericTableViewController {
                 cell.textLabel?.text = "This cell is optional :), if the condition does not succeed, you can build again and this will not be on the table anymore."
                 cell.textLabel?.numberOfLines = 0
                 cell.textLabel?.textAlignment = .center
+            }
+        }
+        
+        add(cell: STBaseGenericCell.self) { cell in
+            cell.textLabel?.textAlignment = .left
+            cell.textLabel?.text = "Display another screen"
+            cell.textLabel?.textColor = .white
+            cell.contentView.backgroundColor = .darkGray
+            
+            cell.didClick = { _ in
+                self.viewModel?.presentDetail()
             }
         }
     }

@@ -4,11 +4,12 @@ public class STTableBuilder<T>: STBuilderProtocol where T: UITableViewCell {
     
     public typealias BuildTable = ((IndexPath, T) -> Void)
     public typealias SetupEdit = ((IndexPath) -> UISwipeActionsConfiguration?)
+    public typealias Counter = (() -> Int)
     
     public var builder: BuildTable?
     public var rows: Int = 1
     public var type: T.Type
-    public var counter: (() -> Int)?
+    public var counter: Counter?
     public var cellId: String?
     public var rowHeight: CGFloat = UITableView.automaticDimension
     public var leadingEdit: SetupEdit?
@@ -28,6 +29,14 @@ public class STTableBuilder<T>: STBuilderProtocol where T: UITableViewCell {
     public func getType<U>() -> U.Type where U: UITableViewCell {
         // swiftlint:disable:next force_cast
         return type as! U.Type
+    }
+    
+    public func setupBuilder(_ builder: BuildTable?) {
+        self.builder = builder
+    }
+    
+    public func setupCounter(_ counter: Counter?) {
+        self.counter = counter
     }
     
     public func getCount() -> Int {
