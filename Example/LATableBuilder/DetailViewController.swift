@@ -16,6 +16,30 @@ class DetailViewController: LATableBuilderController {
     override func buildTable() {
         super.buildTable()
         
+        setupCalendar()
+        setupClicker()
+        
+        reload()
+    }
+    
+    func setupCalendar() {
+        let interval = DateInterval(start: Date(), duration: 2600000)
+        add(cell: (LACalendarTableCell<LACalendarDayCell, LACalendarMonthHeaderView>).self) { cell in
+            cell.setupCalendar(for: interval)
+            cell.calendar.cellBuilder = self.setupDayCell
+        }
+    }
+    
+    func setupDayCell(_ cell: LACalendarDayCell, _ date: Date, _ interval: DateInterval) {
+        cell.setupDay(for: date)
+        cell.configureLayout()
+        
+        cell.click = {
+            debugPrint("[DEBUG] click on \(date)")
+        }
+    }
+    
+    func setupClicker() {
         // Using counter on addTables makes the reload more fluid than calling buildTable
         let builder = addTable(cell: STBaseGenericCell.self)
         
@@ -28,7 +52,5 @@ class DetailViewController: LATableBuilderController {
         }
         
         builder.setupCounter { self.clicks }
-        
-        reload()
     }
 }

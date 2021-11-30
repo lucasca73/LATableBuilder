@@ -432,4 +432,15 @@ extension UIView {
         self.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -padding).isActive = true
         self.topAnchor.constraint(equalTo: view.topAnchor, constant: padding).isActive = true
     }
+    
+    func setHeightConstraint(_ height: CGFloat) {
+        let heightConstraint = NSLayoutConstraint(item: self,
+                                                  attribute: NSLayoutConstraint.Attribute.height,
+                                                  relatedBy: NSLayoutConstraint.Relation.equal,
+                                                  toItem: nil,
+                                                  attribute: NSLayoutConstraint.Attribute.notAnAttribute,
+                                                  multiplier: 1,
+                                                  constant: height)
+        self.addConstraint(heightConstraint)
+    }
 }
