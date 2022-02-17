@@ -8,8 +8,8 @@
 
 Pod::Spec.new do |s|
   s.name             = 'LATableBuilder'
-  s.version          = '0.0.2'
-  s.summary          = 'LATableBuilder is a pod to improve productivity and maintanability of complex table views'
+  s.version          = '0.1.1'
+  s.summary          = 'LATableBuilder makes implementing table views a piece of cake'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -18,23 +18,13 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-
   LATableBuilder
-
-  Implement tables fast as stacking table view cells block builders.
-  ```swift
-  // Adding a single cell
-  add(cell: TextTableViewCell.self) { cell in 
-    cell.configure(with: someData)
-  }
-
-  // Adding a serie of cells
-  addTable(cell: TextTableViewCell.self, count: 3) { index, cell in 
-    let data = someDataArray[index.row]
-    cell.configure(with: data)
-  }
-  ```
-
+  
+  Never worry anymore about datasource, delegate or registering cells. Handle the cell setup when declaring the cell.
+  This will speed up the productivity and let the code clearer without the same standard setup everytime.
+  
+  This pod aims to make easier the use of UITableView.
+  
   MIT license, use as you wish.
                        DESC
 
