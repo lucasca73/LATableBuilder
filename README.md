@@ -30,13 +30,14 @@ class ExampleViewController: LATableBuilderController {
 }
 ```
 
-## Using a list of cells
+## Using a static list of cells
 ```swift
+// Static list
 addTable(cell: UITableViewCell.self, count: 3) { index, cell in 
     cell.textLabel?.text = "Hello World \(index.row)"
 }
 
-// Or this could be done using a loop
+// Static list using a loop
 // not recommended for large amounts of data
 for i in dataArray {
     let dataObject = dataArray[i]
@@ -47,6 +48,18 @@ for i in dataArray {
 ```
 using `[dataObject]` will ensure that the block doesnt holds a strong reference of it
 
+## Using a dynamic list of cell
+```swift
+let builder = addTable(cell: UITableViewCell.self, reloadListener: "key1")
+builder.setupCounter { [dataArray] in dataArray.count }
+builder.setupBuilder{ [dataArray] index, cell in
+    let data = dataArray[index.row]
+    cell.textLabel?.text = "\(data)"
+}
+
+// Using reload listener enables to reload the cells from that specific key
+reload("key1")
+```
 
 ## Creating native sections
 ```swift
@@ -93,6 +106,11 @@ class ViewController: UIViewController, LATableBuilderProtocol {
     }
 }
 ```
+
+## Updating the data
+- `buildTable()` will erase past data and show all fresh and new. 
+- `reload()` will reload all the data same as `reloadData()` from UITableView. Static lists using `count:` can break your code trying to access an index, to prevent that you need to have `counter:` defined.
+- `reload("key1")` will reload only cells that have `"key1"` as a reloadListener.
 
 ## Author
 
