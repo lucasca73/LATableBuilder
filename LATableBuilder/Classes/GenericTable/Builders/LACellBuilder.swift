@@ -1,6 +1,6 @@
 import UIKit
 
-public class STCellBuilder<T>: STBuilderProtocol where T: UITableViewCell {
+public class LACellBuilder<T>: LABuilderProtocol where T: UITableViewCell {
     
     public typealias BuildCell = ((T) -> Void)
     public typealias SetupEdit = (() -> UISwipeActionsConfiguration?)

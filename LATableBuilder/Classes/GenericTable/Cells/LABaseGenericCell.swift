@@ -8,7 +8,7 @@
 
 import UIKit
 
-open class STBaseGenericCell: UITableViewCell, STCustomDidSelectRowAt {
+open class LABaseGenericCell: UITableViewCell, LACustomDidSelectRowAt {
 
     open var didClick: ((IndexPath) -> Void)?
     

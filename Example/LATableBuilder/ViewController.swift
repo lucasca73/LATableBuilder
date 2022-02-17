@@ -42,7 +42,7 @@ class ViewController: UIViewController, LATableBuilderProtocol {
     
     func buildOptionalCell() {
         
-        add(cell: STBaseGenericCell.self) { cell in
+        add(cell: LABaseGenericCell.self) { cell in
             let isOn = self.viewModel?.isTurnedOn ?? false
             cell.textLabel?.textAlignment = .center
             cell.textLabel?.numberOfLines = 0
@@ -58,14 +58,14 @@ class ViewController: UIViewController, LATableBuilderProtocol {
         }
         
         if viewModel?.isTurnedOn == true {
-            add(cell: STBaseGenericCell.self) { cell in
+            add(cell: LABaseGenericCell.self) { cell in
                 cell.textLabel?.text = "This cell is optional :), if the condition does not succeed, you can build again and this will not be on the table anymore."
                 cell.textLabel?.numberOfLines = 0
                 cell.textLabel?.textAlignment = .center
             }
         }
         
-        add(cell: STBaseGenericCell.self) { cell in
+        add(cell: LABaseGenericCell.self) { cell in
             cell.textLabel?.textAlignment = .left
             cell.textLabel?.text = "Display another screen"
             cell.textLabel?.textColor = .white
@@ -80,7 +80,7 @@ class ViewController: UIViewController, LATableBuilderProtocol {
     func buildTableExample() {
         
         if viewModel?.messages.isEmpty == true {
-            add(cell: STBaseGenericCell.self) { cell in
+            add(cell: LABaseGenericCell.self) { cell in
                 cell.textLabel?.text = "Loading fake messages... :)"
                 cell.textLabel?.numberOfLines = 0
                 cell.textLabel?.textAlignment = .center

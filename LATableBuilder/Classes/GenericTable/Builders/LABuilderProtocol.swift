@@ -1,6 +1,6 @@
 import UIKit
 
-public protocol STBuilderProtocol {
+public protocol LABuilderProtocol {
     func callBuilder(path: IndexPath, cell: UITableViewCell)
     func getType<U>() -> U.Type where U: UITableViewCell
     func getCount() -> Int

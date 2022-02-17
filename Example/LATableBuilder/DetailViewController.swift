@@ -41,7 +41,7 @@ class DetailViewController: LATableBuilderController {
     
     func setupClicker() {
         // Using counter on addTables makes the reload more fluid than calling buildTable
-        let builder = addTable(cell: STBaseGenericCell.self)
+        let builder = addTable(cell: LABaseGenericCell.self)
         
         builder.setupBuilder { index, cell in
             cell.didClick = { _ in

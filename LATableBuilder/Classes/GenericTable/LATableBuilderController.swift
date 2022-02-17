@@ -1,10 +1,10 @@
 import UIKit
 
-public protocol STCustomDidSelectRowAt {
+public protocol LACustomDidSelectRowAt {
     func didSelectRowAt(indexPath: IndexPath)
 }
 
-public typealias STSectionViewBuilder = (_ section: Int) -> UIView?
+public typealias LASectionViewBuilder = (_ section: Int) -> UIView?
 
 open class LATableBuilderController: UIViewController {
     
@@ -162,7 +162,7 @@ open class LATableBuilderController: UIViewController {
     open func addSection( title: String? = nil,
                      height: CGFloat = 0,
                      reloadListener: String? = nil,
-                     _ builder: STSectionViewBuilder? = nil ) {
+                     _ builder: LASectionViewBuilder? = nil ) {
         let sec = STSectionBuilder()
         sec.viewBuilder = builder
         sec.height = height
@@ -409,7 +409,7 @@ extension LATableBuilderController: UITableViewDelegate, UITableViewDataSource {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        if let clicableCell = tableView.cellForRow(at: indexPath) as? STCustomDidSelectRowAt {
+        if let clicableCell = tableView.cellForRow(at: indexPath) as? LACustomDidSelectRowAt {
             clicableCell.didSelectRowAt(indexPath: indexPath)
         }
     }

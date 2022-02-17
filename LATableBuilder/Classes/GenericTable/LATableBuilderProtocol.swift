@@ -50,21 +50,21 @@ extension LATableBuilderProtocol {
     public func addSection( title: String? = nil,
                      height: CGFloat = 0,
                      reloadListener: String? = nil,
-                     _ builder: STSectionViewBuilder? = nil ) {
+                     _ builder: LASectionViewBuilder? = nil ) {
         table.addSection(title: title, height: height, reloadListener: reloadListener, builder)
     }
     
     @discardableResult public func add<T: UITableViewCell>(cell: T.Type,
                                                            height: CGFloat = UITableView.automaticDimension,
                                                            reloadListener: String? = nil,
-                                                           builder: ((T) -> Void)? = nil ) -> STCellBuilder<T> {
+                                                           builder: ((T) -> Void)? = nil ) -> LACellBuilder<T> {
         table.add(cell: T.self, height: height, reloadListener: reloadListener, builder: builder)
     }
     
     @discardableResult public func addTable<T: UITableViewCell>(cell: T.Type,
                                                          counter: @escaping (() -> Int),
                                                          reloadListener: String? = nil,
-                                                         builder: ((IndexPath, T) -> Void)? = nil ) -> STTableBuilder<T> {
+                                                         builder: ((IndexPath, T) -> Void)? = nil ) -> LATableBuilder<T> {
         table.addTable(cell: T.self, counter: counter, reloadListener: reloadListener, builder: builder)
     }
     
@@ -72,12 +72,12 @@ extension LATableBuilderProtocol {
                                                                 count: Int,
                                                                 rowHeight: CGFloat = UITableView.automaticDimension,
                                                                 reloadListener: String? = nil,
-                                                                builder: ((IndexPath, T) -> Void)? = nil ) -> STTableBuilder<T> {
+                                                                builder: ((IndexPath, T) -> Void)? = nil ) -> LATableBuilder<T> {
         table.addTable(cell: T.self, count: count, rowHeight: rowHeight, reloadListener: reloadListener, builder: builder)
     }
     
     @discardableResult public func addTable<T: UITableViewCell>(cell: T.Type,
-                                                                reloadListener: String? = nil) -> STTableBuilder<T> {
+                                                                reloadListener: String? = nil) -> LATableBuilder<T> {
         table.addTable(cell: T.self, reloadListener: reloadListener)
     }
     
@@ -89,7 +89,7 @@ extension LATableBuilderProtocol {
         table.insertNewSection(id: id, animation: animation)
     }
     
-    public func builder(for indexPath: IndexPath) -> STBuilderProtocol? {
+    public func builder(for indexPath: IndexPath) -> LABuilderProtocol? {
         table.builder(for: indexPath)
     }
 }

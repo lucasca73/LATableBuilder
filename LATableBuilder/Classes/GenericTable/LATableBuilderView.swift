@@ -10,7 +10,7 @@ import UIKit
 open class LATableBuilderView: UITableView {
     public var reloadAnimation: UITableView.RowAnimation { .none }
     
-    open var sections = [STSectionBuilder]()
+    open var sections = [LASectionBuilder]()
     
     open func buildOnWillAppear() -> Bool {
         return true
@@ -129,8 +129,8 @@ open class LATableBuilderView: UITableView {
     open func addSection( title: String? = nil,
                           height: CGFloat = 0,
                           reloadListener: String? = nil,
-                          _ builder: STSectionViewBuilder? = nil ) {
-        let sec = STSectionBuilder()
+                          _ builder: LASectionViewBuilder? = nil ) {
+        let sec = LASectionBuilder()
         sec.viewBuilder = builder
         sec.height = height
         sec.title = title
@@ -142,10 +142,10 @@ open class LATableBuilderView: UITableView {
     @discardableResult open func add<T: UITableViewCell>(cell: T.Type,
                                                          height: CGFloat = UITableView.automaticDimension,
                                                          reloadListener: String? = nil,
-                                                         builder: ((T) -> Void)? = nil ) -> STCellBuilder<T> {
+                                                         builder: ((T) -> Void)? = nil ) -> LACellBuilder<T> {
         
         self.register(cellType: cell)
-        let cellBuilder = STCellBuilder(type: cell, builder: builder, cellId: reloadListener)
+        let cellBuilder = LACellBuilder(type: cell, builder: builder, cellId: reloadListener)
         cellBuilder.type = cell
         cellBuilder.height = height
         
@@ -167,10 +167,10 @@ open class LATableBuilderView: UITableView {
                                                               count: Int,
                                                               rowHeight: CGFloat = UITableView.automaticDimension,
                                                               reloadListener: String? = nil,
-                                                              builder: ((IndexPath, T) -> Void)? = nil ) -> STTableBuilder<T> {
+                                                              builder: ((IndexPath, T) -> Void)? = nil ) -> LATableBuilder<T> {
         
         self.register(cellType: cell)
-        let tb = STTableBuilder(type: cell, builder: builder, cellId: reloadListener)
+        let tb = LATableBuilder(type: cell, builder: builder, cellId: reloadListener)
         tb.type = cell
         tb.rows = count
         tb.rowHeight = rowHeight
@@ -193,10 +193,10 @@ open class LATableBuilderView: UITableView {
     @discardableResult open func addTable<T: UITableViewCell>(cell: T.Type,
                                                               counter: @escaping (() -> Int),
                                                               reloadListener: String? = nil,
-                                                              builder: ((IndexPath, T) -> Void)? = nil ) -> STTableBuilder<T> {
+                                                              builder: ((IndexPath, T) -> Void)? = nil ) -> LATableBuilder<T> {
         
         self.register(cellType: cell)
-        let tb = STTableBuilder(type: cell, builder: builder, cellId: reloadListener)
+        let tb = LATableBuilder(type: cell, builder: builder, cellId: reloadListener)
         tb.type = cell
         tb.rows = counter()
         tb.counter = counter
@@ -216,10 +216,10 @@ open class LATableBuilderView: UITableView {
         return tb
     }
     
-    @discardableResult open func addTable<T: UITableViewCell>(cell: T.Type, reloadListener: String? = nil) -> STTableBuilder<T> {
+    @discardableResult open func addTable<T: UITableViewCell>(cell: T.Type, reloadListener: String? = nil) -> LATableBuilder<T> {
         
         self.register(cellType: cell)
-        let tb = STTableBuilder(type: cell, builder: nil, cellId: reloadListener)
+        let tb = LATableBuilder(type: cell, builder: nil, cellId: reloadListener)
         tb.type = cell
         
         if let sec = sections.last {
@@ -289,7 +289,7 @@ open class LATableBuilderView: UITableView {
         }
     }
     
-    open func builder(for indexPath: IndexPath) -> STBuilderProtocol? {
+    open func builder(for indexPath: IndexPath) -> LABuilderProtocol? {
         let section = sections[indexPath.section]
         
         if let tableBuilder = section.getTable() {
@@ -315,7 +315,7 @@ extension LATableBuilderView: UITableViewDelegate, UITableViewDataSource {
         
         if indexPath.section < sections.count {
             let section = sections[indexPath.section]
-            var builder: STBuilderProtocol?
+            var builder: LABuilderProtocol?
             
             builder = section.getTable()
             
@@ -375,7 +375,7 @@ extension LATableBuilderView: UITableViewDelegate, UITableViewDataSource {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        if let clicableCell = tableView.cellForRow(at: indexPath) as? STCustomDidSelectRowAt {
+        if let clicableCell = tableView.cellForRow(at: indexPath) as? LACustomDidSelectRowAt {
             clicableCell.didSelectRowAt(indexPath: indexPath)
         }
     }
