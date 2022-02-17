@@ -377,6 +377,8 @@ extension LATableBuilderView: UITableViewDelegate, UITableViewDataSource {
         
         if let clicableCell = tableView.cellForRow(at: indexPath) as? LACustomDidSelectRowAt {
             clicableCell.didSelectRowAt(indexPath: indexPath)
+        } else if let builder = self.builder(for: indexPath) {
+            builder.didSelectRow(at: indexPath)
         }
     }
     

@@ -41,14 +41,15 @@ class DetailViewController: LATableBuilderController {
     
     func setupClicker() {
         // Using counter on addTables makes the reload more fluid than calling buildTable
-        let builder = addTable(cell: LABaseGenericCell.self)
+        let builder = addTable(cell: UITableViewCell.self)
         
         builder.setupBuilder { index, cell in
-            cell.didClick = { _ in
-                self.clicks += 1
-                self.reload()
-            }
             cell.textLabel?.text = "Cell - \(index.row)"
+        }
+        
+        builder.setupDidSelect { [weak self] index in
+            self?.clicks += 1
+            self?.reload()
         }
         
         builder.setupCounter { self.clicks }

@@ -5,6 +5,7 @@ public class LATableBuilder<T>: LABuilderProtocol where T: UITableViewCell {
     public typealias BuildTable = ((IndexPath, T) -> Void)
     public typealias SetupEdit = ((IndexPath) -> UISwipeActionsConfiguration?)
     public typealias Counter = (() -> Int)
+    public typealias DidSelected = ((IndexPath) -> Void)
     
     public var builder: BuildTable?
     public var rows: Int = 1
@@ -14,6 +15,7 @@ public class LATableBuilder<T>: LABuilderProtocol where T: UITableViewCell {
     public var rowHeight: CGFloat = UITableView.automaticDimension
     public var leadingEdit: SetupEdit?
     public var trailingEdit: SetupEdit?
+    public var didSelectRow: DidSelected?
     
     public init(type: T.Type, builder: BuildTable?, cellId: String?) {
         self.builder = builder
@@ -37,6 +39,10 @@ public class LATableBuilder<T>: LABuilderProtocol where T: UITableViewCell {
     
     public func setupCounter(_ counter: Counter?) {
         self.counter = counter
+    }
+    
+    public func setupDidSelect(_ didSelect: DidSelected?) {
+        self.didSelectRow = didSelect
     }
     
     public func getCount() -> Int {
@@ -66,4 +72,7 @@ public class LATableBuilder<T>: LABuilderProtocol where T: UITableViewCell {
         trailingEdit?(index)
     }
     
+    public func didSelectRow(at index: IndexPath) {
+        didSelectRow?(index)
+    }
 }

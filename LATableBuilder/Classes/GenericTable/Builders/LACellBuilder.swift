@@ -4,6 +4,7 @@ public class LACellBuilder<T>: LABuilderProtocol where T: UITableViewCell {
     
     public typealias BuildCell = ((T) -> Void)
     public typealias SetupEdit = (() -> UISwipeActionsConfiguration?)
+    public typealias DidSelected = (() -> Void)
     
     public var buildCell: BuildCell?
     public var type: T.Type
@@ -11,6 +12,7 @@ public class LACellBuilder<T>: LABuilderProtocol where T: UITableViewCell {
     public var height: CGFloat = UITableView.automaticDimension
     public var leadingEdit: SetupEdit?
     public var trailingEdit: SetupEdit?
+    public var didSelectRow: DidSelected?
     
     public init(type: T.Type, builder: BuildCell?, cellId: String?) {
         self.buildCell = builder
@@ -50,5 +52,13 @@ public class LACellBuilder<T>: LABuilderProtocol where T: UITableViewCell {
     
     public func setupTrailingEdit(index: IndexPath) -> UISwipeActionsConfiguration? {
         trailingEdit?()
+    }
+    
+    public func setupDidSelect(_ didSelect: DidSelected?) {
+        self.didSelectRow = didSelect
+    }
+    
+    public func didSelectRow(at index: IndexPath) {
+        didSelectRow?()
     }
 }

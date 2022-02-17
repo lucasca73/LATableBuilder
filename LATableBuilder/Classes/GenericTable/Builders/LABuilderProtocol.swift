@@ -9,4 +9,5 @@ public protocol LABuilderProtocol {
     func getHeight() -> CGFloat
     func setupLeadingEdit(index: IndexPath) -> UISwipeActionsConfiguration?
     func setupTrailingEdit(index: IndexPath) -> UISwipeActionsConfiguration?
+    func didSelectRow(at index: IndexPath)
 }
