@@ -1,16 +1,20 @@
 # LATableBuilder
+![GitHub](https://img.shields.io/github/license/lucasca73/LATableBuilder)
+![GitHub](https://img.shields.io/badge/pods-0.2.1-red)
+![GitHub](https://img.shields.io/badge/Swift-5-orange)
 
 ## Example
-
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
 ## Installation
-
 LATableBuilder is available through [CocoaPods](https://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
 pod 'LATableBuilder'
+
+# or selecting git podspec directly
+pod 'LATableBuilder', :git => 'https://github.com/lucasca73/LATableBuilder.git'
 ```
 
 ## Hello world
