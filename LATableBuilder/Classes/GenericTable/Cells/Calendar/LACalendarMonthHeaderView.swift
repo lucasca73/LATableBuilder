@@ -55,7 +55,7 @@ open class LACalendarMonthHeaderView: UICollectionReusableView, LAHeaderViewSetu
     }
 }
 
-extension UIStackView {
+public extension UIStackView {
     func removeAllArrangedSubviews() {
         for stacksub in arrangedSubviews {
             stacksub.removeFromSuperview()

@@ -1,4 +1,5 @@
 import UIKit
+import SnapKit
 
 public protocol LACustomDidSelectRowAt {
     func didSelectRowAt(indexPath: IndexPath)
@@ -9,18 +10,26 @@ public typealias LASectionViewBuilder = (_ section: Int) -> UIView?
 open class LATableBuilderController: UIViewController {
     
     public var reloadAnimation: UITableView.RowAnimation { .none }
+    open func buildOnWillAppear() -> Bool { true }
     
+    // Views
     open var tableView = UITableView()
+    open var screenStackView: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        return stack
+    }()
+    
+    // Builders
     open var sections = [LASectionBuilder]()
+    
+    // Event setup
     open var willAppearEvent: (() -> Void)?
     open var didAppearSetup: ( (LATableBuilderController) -> Void )?
     
-    open func buildOnWillAppear() -> Bool {
-        return true
-    }
+    deinit { debugPrint("[deinit] \(className)") }
     
     override open func viewWillAppear(_ animated: Bool) {
-        
         if buildOnWillAppear() {
             buildTable()
             tableView.reloadData()
@@ -40,24 +49,34 @@ open class LATableBuilderController: UIViewController {
         tableView.reloadData()
     }
     
-    deinit {
-        debugPrint("[deinit] \(className)")
-    }
-    
     override open func viewDidLoad() {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.rowHeight = UITableView.automaticDimension
         
-        self.view.backgroundColor = .white
+        view.backgroundColor = .white
+        setupTableViewConstraints()
+        setupTableViewConfig()
         
-        self.view.addSubview(tableView)
-        
-        tableView.setAllConstraints(on: self.view)
+        super.viewDidLoad()
+    }
+    
+    open func setupTableViewConfig() {
         tableView.separatorStyle = .none
-        
         tableView.delegate = self
         tableView.dataSource = self
-        super.viewDidLoad()
+    }
+    
+    open func setupStackViews(_ views: [UIView]) {
+        screenStackView.removeAllArrangedSubviews()
+        views.reversed().forEach({ screenStackView.insertArrangedSubview($0, at: 0) })
+    }
+    
+    open func setupTableViewConstraints() {
+        view.addSubview(screenStackView)
+        screenStackView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        screenStackView.insertArrangedSubview(tableView, at: 0)
     }
     
     open func clearBuilders() {
@@ -424,25 +443,5 @@ extension LATableBuilderController: UITableViewDelegate, UITableViewDataSource {
     public func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let config = builder(for: indexPath)?.setupTrailingEdit(index: indexPath)
         return config ?? UISwipeActionsConfiguration(actions: [])
-    }
-}
-
-extension UIView {
-    func setAllConstraints(on view: UIView, padding: CGFloat = 0) {
-        self.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding).isActive = true
-        self.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding).isActive = true
-        self.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -padding).isActive = true
-        self.topAnchor.constraint(equalTo: view.topAnchor, constant: padding).isActive = true
-    }
-    
-    func setHeightConstraint(_ height: CGFloat) {
-        let heightConstraint = NSLayoutConstraint(item: self,
-                                                  attribute: NSLayoutConstraint.Attribute.height,
-                                                  relatedBy: NSLayoutConstraint.Relation.equal,
-                                                  toItem: nil,
-                                                  attribute: NSLayoutConstraint.Attribute.notAnAttribute,
-                                                  multiplier: 1,
-                                                  constant: height)
-        self.addConstraint(heightConstraint)
     }
 }

@@ -31,7 +31,7 @@ extension LATableBuilderProtocol {
     public func setupTableView() {
         self.view.backgroundColor = .white
         self.view.addSubview(table)
-        table.setAllConstraints(on: self.view)
+        table.snp.makeConstraints { $0.edges.equalToSuperview() }
         table.setupTableView()
     }
     

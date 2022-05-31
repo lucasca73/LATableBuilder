@@ -45,7 +45,7 @@ class LAGenericCollectionView<Cell: UICollectionViewCell>: UIViewController, UIC
         
         if let collection = collectionView {
             self.view.addSubview(collection)
-            collectionView?.setAllConstraints(on: self.view)
+            collectionView?.snp.makeConstraints { $0.edges.equalToSuperview() }
         }
         
         collectionView?.backgroundColor = .white

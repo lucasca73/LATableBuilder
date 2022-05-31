@@ -31,8 +31,8 @@ class LATableCollectionCell<Cell: UICollectionViewCell>: UITableViewCell {
     
     func configureLayout() {
         
-        self.contentView.addSubview(collection.view)
-        collection.view.setAllConstraints(on: self.contentView)
+        contentView.addSubview(collection.view)
+        collection.view.snp.makeConstraints { $0.edges.equalToSuperview() }
         
         collection.counter = { [weak self] in
             self?.builder?.counter?() ?? 0
